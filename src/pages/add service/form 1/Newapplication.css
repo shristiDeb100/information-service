@@ -1,0 +1,103 @@
+/* Root full-screen centering */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #f7fafd;
+  font-family: 'Georgia', serif;
+}
+
+/* Page wrapper for full-screen center */
+.page-wrapper {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Form card styling */
+.form-container {
+  width: 65vw;
+  background-color: #fefefe;
+  padding: 40px;
+  border-radius: 12px;
+  max-width: 1000px;
+  width: 100%;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  border: 2px solid #d4e3f0;
+  position: relative;
+}
+
+/* Heading style */
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #003366;
+  font-size: 24px;
+  font-weight: bold;
+  border-bottom: 1px solid #d3e0ea;
+  padding-bottom: 10px;
+}
+
+/* Label + input spacing */
+label {
+  display: block;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Text input, textarea, select */
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  margin-top: 5px;
+  box-sizing: border-box;
+  transition: border 0.3s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #3399ff;
+  outline: none;
+}
+
+/* Textarea height */
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Button */
+button {
+  width: 100%;
+  margin-top: 30px;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Optional: Signature style text */
+.signature {
+  font-style: italic;
+  color: #555;
+  text-align: right;
+  margin-top: 40px;
+}
+

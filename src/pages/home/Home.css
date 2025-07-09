@@ -1,0 +1,155 @@
+.home-container {
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+  padding: 40px;
+  background: #f6fefe;
+}
+
+.hero-section h1 {
+  font-weight: bold;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.hero-section button {
+  background-color: #198754;
+  color: white;
+  padding: 12px 24px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.hero-section button:hover {
+  background-color: #146c43;
+}
+
+.stats-section {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 40px 0;
+  background-color: #e8f0fe;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.stat-card {
+  background-color: #ccf5d9;
+  padding: 25px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  min-width: 150px;
+}
+
+.stat-card h2 {
+  font-size: 28px;
+  color: #006400;
+}
+
+.stat-card p {
+  margin-top: 8px;
+  font-size: 16px;
+}
+
+.filter-buttons {
+  margin-top: 20px;
+}
+
+.filter-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.filter-buttons button {
+  padding: 10px 22px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 1.5px solid #ccc;
+  background-color: white;
+  color: #000;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.filter-buttons button:hover {
+  background-color: #f0f0f0;
+}
+
+.filter-buttons .active {
+  background-color: #d1f2e2; /* soft mint green */
+  border: 2px solid #198754;
+  color: #000;
+}
+
+.explore-button {
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: #198754; /* Green background */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.explore-button:hover {
+  background-color: #146c43;
+}
+.explore-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+
+
+.categories-section {
+  margin-top: 40px;
+}
+
+.categories-section h2 {
+  font-size: 22px;
+  margin-bottom: 30px;
+}
+
+.category-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+.category-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  width: 180px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  transition: 0.3s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+}
+
+.category-card img {
+  width: 40px;
+  margin-bottom: 12px;
+}
+
+.category-card .count {
+  color: #198754;
+  font-weight: 600;
+}
+
+.category-card h3 {
+  font-size: 15px;
+  margin-top: 6px;
+}
