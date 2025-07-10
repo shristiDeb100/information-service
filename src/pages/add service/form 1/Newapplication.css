@@ -1,16 +1,19 @@
 /* Root full-screen centering */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
   padding: 0;
   background-color: #f7fafd;
-  font-family: 'Georgia', serif;
+  font-family: "Georgia", serif;
 }
 
 /* Page wrapper for full-screen center */
 .page-wrapper {
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
+  /* width: 100vw; */
+  padding-top: 64px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -100,4 +103,3 @@ button:hover {
   text-align: right;
   margin-top: 40px;
 }
-

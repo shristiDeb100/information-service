@@ -1,22 +1,24 @@
 import React, { useState } from "react";
 import "./Newapplication.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const NewApplicationForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     id: "",
     serviceType: "",
     eligibility: "",
     applicationMode: "",
     url: "",
-    address: ""
+    address: "",
+    serviceSummary: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -26,20 +28,93 @@ const NewApplicationForm = () => {
       ...prev,
       applicationMode: value,
       url: value === "Online" || value === "Both" ? prev.url : "",
-      address: value === "Offline" || value === "Both" ? prev.address : ""
+      address: value === "Offline" || value === "Both" ? prev.address : "",
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Check if all required fields are filled
+    const requiredFields = [
+      "id",
+      "serviceType",
+      "eligibility",
+      "applicationMode",
+      "serviceSummary",
+    ];
+    const missingFields = requiredFields.filter(
+      (field) => !formData[field] || formData[field].trim() === ""
+    );
+
+    // Check conditional fields based on application mode
+    if (
+      formData.applicationMode === "Online" &&
+      (!formData.url || formData.url.trim() === "")
+    ) {
+      missingFields.push("url");
+    }
+    if (
+      formData.applicationMode === "Offline" &&
+      (!formData.address || formData.address.trim() === "")
+    ) {
+      missingFields.push("address");
+    }
+    if (formData.applicationMode === "Both") {
+      if (!formData.url || formData.url.trim() === "")
+        missingFields.push("url");
+      if (!formData.address || formData.address.trim() === "")
+        missingFields.push("address");
+    }
+
+    if (missingFields.length > 0) {
+      alert(`Please fill in all required fields: ${missingFields.join(", ")}`);
+      return;
+    }
+
     console.log("Submitted Data:", formData);
-    alert("Form Submitted Successfully!");
+
+    navigate("/add-service/process-form", {
+      state: {
+        serviceName: formData.id,
+        serviceData: formData,
+      },
+    });
+  };
+
+  const handleBack = () => {
+    navigate("/");
   };
 
   return (
     <div className="page-wrapper">
       <div className="form-container">
-        <h2>New Application Form</h2>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "1rem",
+          }}
+        >
+          <button
+            onClick={handleBack}
+            style={{
+              padding: "0.5rem 1rem",
+              background: "#6b7280",
+              width: "100px",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              fontSize: "0.9rem",
+            }}
+          >
+            ← Back
+          </button>
+          <h2>New Application Form</h2>
+          <div style={{ width: "120px" }}></div> {/* Spacer for centering */}
+        </div>
         <form onSubmit={handleSubmit}>
           <label>Service Name:</label>
           <input
@@ -50,7 +125,6 @@ const NewApplicationForm = () => {
             onChange={handleChange}
             required
           />
-       
 
           <label>Service Summary:</label>
           <textarea
@@ -60,42 +134,25 @@ const NewApplicationForm = () => {
             onChange={handleChange}
             required
           />
-          <label>Application Mode:</label>
-<div className="application-mode-container">
           <div className="application-mode-group">
-            <label>
-              <input
-                type="radio"
-                name="applicationMode"
-                value="Online"
-                checked={formData.applicationMode === "Online"}
-                onChange={handleModeChange}
-              /> Online
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="applicationMode"
-                value="Offline"
-                checked={formData.applicationMode === "Offline"}
-                onChange={handleModeChange}
-              /> Offline
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="applicationMode"
-                value="Both"
-                checked={formData.applicationMode === "Both"}
-                onChange={handleModeChange}
-              /> Both
-            </label>
+            <label htmlFor="applicationMode">Application Mode:</label>
+            <select
+              id="applicationMode"
+              name="applicationMode"
+              value={formData.applicationMode}
+              onChange={handleModeChange}
+              required
+            >
+              <option value="">Select application mode</option>
+              <option value="Online">Online</option>
+              <option value="Offline">Offline</option>
+              <option value="Both">Both</option>
+            </select>
           </div>
-          </div>
-
 
           {/* Conditional fields for Application Mode */}
-          {(formData.applicationMode === "Online" || formData.applicationMode === "Both") && (
+          {(formData.applicationMode === "Online" ||
+            formData.applicationMode === "Both") && (
             <div className="conditional-field">
               <label>Application URL:</label>
               <input
@@ -104,11 +161,15 @@ const NewApplicationForm = () => {
                 placeholder="Enter application URL"
                 value={formData.url}
                 onChange={handleChange}
-                required={formData.applicationMode === "Online" || formData.applicationMode === "Both"}
+                required={
+                  formData.applicationMode === "Online" ||
+                  formData.applicationMode === "Both"
+                }
               />
             </div>
           )}
-          {(formData.applicationMode === "Offline" || formData.applicationMode === "Both") && (
+          {(formData.applicationMode === "Offline" ||
+            formData.applicationMode === "Both") && (
             <div className="conditional-field">
               <label>Application Address:</label>
               <input
@@ -117,7 +178,10 @@ const NewApplicationForm = () => {
                 placeholder="Enter application address"
                 value={formData.address}
                 onChange={handleChange}
-                required={formData.applicationMode === "Offline" || formData.applicationMode === "Both"}
+                required={
+                  formData.applicationMode === "Offline" ||
+                  formData.applicationMode === "Both"
+                }
               />
             </div>
           )}
@@ -144,8 +208,7 @@ const NewApplicationForm = () => {
             onChange={handleChange}
             required
           />
-          <Link to="/add-service/process-form" style={{ textDecoration: "none", color: "white" }}>
-            <button type="submit">Create</button></Link>
+          <button type="submit">Create</button>
         </form>
       </div>
     </div>
