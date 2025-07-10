@@ -10,16 +10,18 @@ const Layout = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <Header />
-
+    <div
+      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+    >
       {/* Search Bar (Horizontal Nav) */}
       <SearchBar onSearch={setSearchQuery} />
 
       {/* Main Content Row (Sidebar + Main) */}
       <div style={{ display: "flex", flex: 1 }}>
         {/* Sidebar */}
-        <div style={{ width: "240px", backgroundColor: "#111827", color: "#fff" }}>
+        <div
+          style={{ width: "240px", backgroundColor: "#111827", color: "#fff" }}
+        >
           <Sidebar />
         </div>
 
@@ -28,9 +30,6 @@ const Layout = () => {
           <MainContent searchQuery={searchQuery} />
         </div>
       </div>
-
-      {/* Footer that spans the full width */}
-      <Footer />
     </div>
   );
 };

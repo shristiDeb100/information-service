@@ -1,0 +1,128 @@
+/* PublishServiceDetail Page Styles */
+.publish-service-detail-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem 2rem;
+}
+
+.publish-service-detail-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2563eb;
+  letter-spacing: 1px;
+}
+
+.section-label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+  font-size: 1.1rem;
+  color: #22223b;
+}
+
+.radio-group {
+  display: flex;
+  gap: 2rem;
+  margin: 1rem 0;
+  align-items: center;
+}
+
+.radio-group label {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #444;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-size: 0.97rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #f8fafc;
+  transition: border 0.2s;
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border: 1.5px solid #2563eb;
+  outline: none;
+  background: #fff;
+}
+
+.add-document-btn {
+  margin-top: 0.7rem;
+  background: #20c997;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-document-btn:hover {
+  background: #198754;
+}
+
+.publish-btn {
+  margin-top: 2rem;
+  padding: 0.8rem 2.2rem;
+  background: linear-gradient(90deg, #2563eb 60%, #20c997 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+  transition: background 0.2s, transform 0.2s;
+}
+
+.publish-btn:hover {
+  background: linear-gradient(90deg, #1d4ed8 60%, #198754 100%);
+  transform: translateY(-2px) scale(1.03);
+}
+
+@media (max-width: 600px) {
+  .publish-service-detail-container {
+    padding: 1.2rem 0.5rem;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+  .publish-service-detail-title {
+    font-size: 1.3rem;
+  }
+}
