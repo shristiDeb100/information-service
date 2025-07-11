@@ -122,7 +122,7 @@ const PendingDetails = () => {
           </div>
         </div>
         <div className="action-buttons">
-          <button className="review-btn" onClick={() => navigate("/home")}>
+          <button className="review-btn" onClick={() => navigate("/")}>
             Mark as Reviewed
           </button>
         </div>

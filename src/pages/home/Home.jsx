@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./Home.css";
 import { useNavigate, useLocation } from "react-router-dom";
+import Sidebar from "../../components/dashboard/sidebar";
+import SearchBar from "../../components/dashboard/searchbar";
 
 const stats = [
   { count: "3680+", label: "Total services" },
@@ -155,6 +157,7 @@ const Home = () => {
   const [showServiceForm, setShowServiceForm] = useState(false);
   const [formData, setFormData] = useState(serviceManagementData);
   const [publishedServices, setPublishedServices] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -173,7 +176,13 @@ const Home = () => {
   // Handle scroll state from navigation and new service
   useEffect(() => {
     if (location.state?.scrollTo) {
-      setActiveTab(location.state.scrollTo);
+      if (location.state.scrollTo === "top") {
+        // Scroll to top of the page
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setActiveTab("published"); // Default to published tab when going to top
+      } else {
+        setActiveTab(location.state.scrollTo);
+      }
 
       // If there's a new service, add it to the list
       if (location.state?.newService) {
@@ -217,589 +226,251 @@ const Home = () => {
     setShowServiceForm(false);
   };
 
+  // Delete service function
+  const handleDeleteService = (serviceNum, serviceName) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete "${serviceName}"?`
+    );
+    if (confirmDelete) {
+      setPublishedServices((prev) =>
+        prev.filter((service) => service.serviceNum !== serviceNum)
+      );
+      alert(`Service "${serviceName}" has been deleted successfully!`);
+    }
+  };
+
   return (
-    <div className="home-container">
-      {/* Back Button */}
-      <button
-        onClick={() => navigate("/")}
-        style={{
-          margin: "16px 0 24px 0",
-          padding: "8px 20px",
-
-          background: "#2563eb",
-          color: "#fff",
-          border: "none",
-          borderRadius: "6px",
-          fontWeight: 600,
-          fontSize: "15px",
-          cursor: "pointer",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "8px",
-        }}
-      >
-        <span style={{ fontSize: "18px" }}>←</span> Back
-      </button>
-
-      <div className="hero-section">
-        <h1>#INFORMATIONCENTER / #KNOWLEDGEFORYOU</h1>
-        <button onClick={() => setShowServiceForm(true)}>
-          Add New Service →
-        </button>
+    <div className="home-layout">
+      {/* Search Bar */}
+      <div className="search-bar-container">
+        <SearchBar onSearch={setSearchQuery} />
       </div>
 
-      <div className="stats-section">
-        {stats.map((stat, idx) => (
-          <div className="stat-card" key={idx}>
-            <h2>{stat.count}</h2>
-            <p>{stat.label} →</p>
+      {/* Main Layout with Sidebar */}
+      <div className="main-layout">
+        {/* Sidebar */}
+        <div className="sidebar-container">
+          <Sidebar />
+        </div>
+
+        {/* Main Content Area */}
+        <div className="main-content">
+          <div className="content-header">
+            <div className="header-content">
+              <h1 className="main-title">Information Services Dashboard</h1>
+              <p className="subtitle">
+                Manage and monitor government services efficiently
+              </p>
+            </div>
           </div>
-        ))}
-      </div>
 
-      <div className="service-tabs">
-        <button
-          className={`tab-button ${activeTab === "published" ? "active" : ""}`}
-          onClick={() => setActiveTab("published")}
-        >
-          Published Services
-        </button>
-        <button
-          className={`tab-button ${activeTab === "pending" ? "active" : ""}`}
-          onClick={() => setActiveTab("pending")}
-        >
-          Pending Services
-        </button>
-      </div>
-
-      {activeTab === "published" && (
-        <div className="published-services-section">
-          <h2>Published Services</h2>
-          <div className="services-grid">
-            {publishedServices.map((service) => (
-              <div className="service-card" key={service.serviceNum}>
-                <div className="service-header">
-                  <div className="service-number">#{service.serviceNum}</div>
-                  <span
-                    className={`service-status ${service.status.toLowerCase()}`}
-                  >
-                    {service.status}
-                  </span>
-                </div>
-                <div className="service-content">
-                  <h3 className="service-title">{service.serviceName}</h3>
-                  <p className="service-description">
-                    {service.serviceSummary}
-                  </p>
-                </div>
-                <div className="service-stats">
-                  <div className="stat-item">
-                    <div className="stat-icon">👁️</div>
-                    <div className="stat-info">
-                      <span className="stat-value">{service.views}</span>
-                      <span className="stat-label">Views</span>
-                    </div>
-                  </div>
-                  <div className="stat-item">
-                    <div className="stat-icon">📝</div>
-                    <div className="stat-info">
-                      <span className="stat-value">{service.applications}</span>
-                      <span className="stat-label">Applications</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="service-footer">
-                  <div className="publish-info">
-                    <span className="publish-date">
-                      Published: {service.publishedDate}
-                    </span>
-                  </div>
-                  <button
-                    className="view-details-btn"
-                    onClick={() =>
-                      navigate("/home/publishDetails", {
-                        state: {
-                          serviceNum: service.serviceNum,
-                          serviceData: service,
-                        },
-                      })
-                    }
-                  >
-                    <span>View Details</span>
-                    <span className="arrow">→</span>
-                  </button>
+          {/* Stats Cards */}
+          <div className="stats-container">
+            {stats.map((stat, idx) => (
+              <div className="stat-card-new" key={idx}>
+                <div className="stat-icon-new">📊</div>
+                <div className="stat-content">
+                  <div className="stat-number">{stat.count}</div>
+                  <div className="stat-label-new">{stat.label}</div>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      )}
 
-      {activeTab === "pending" && (
-        <div className="pending-services-section">
-          <h2>Pending Services</h2>
-          <div className="services-grid">
-            {pendingServices.map((service) => (
-              <div
-                className="service-card pending-card"
-                key={service.serviceNum}
-              >
-                <div className="service-header">
-                  <div className="service-number">#{service.serviceNum}</div>
-                  <div className="header-right">
-                    <span
-                      className={`service-status ${service.status.toLowerCase()}`}
-                    >
-                      {service.status}
-                    </span>
-                  </div>
-                </div>
-                <div className="service-content">
-                  <h3 className="service-title">{service.serviceName}</h3>
-                  <p className="service-description">
-                    {service.serviceSummary}
-                  </p>
-                </div>
-                <div className="pending-info">
-                  <div className="info-item">
-                    <div className="info-icon">📅</div>
-                    <div className="info-details">
-                      <span className="info-label">Submitted</span>
-                      <span className="info-value">
-                        {service.submittedDate}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="info-item">
-                    <div className="info-icon">⏱️</div>
-                    <div className="info-details">
-                      <span className="info-label">Review Time</span>
-                      <span className="info-value">{service.reviewTime}</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="service-footer">
-                  <div className="submit-info">
-                    <span className="submit-date">
-                      Submitted: {service.submittedDate}
-                    </span>
-                  </div>
-                  <button
-                    className="review-btn"
-                    onClick={() =>
-                      navigate("/pendingDetails", {
-                        state: { serviceNum: service.serviceNum },
-                      })
-                    }
-                  >
-                    <span>Review Service</span>
-                    <span className="arrow">→</span>
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Comprehensive Service Management Form */}
-      {showServiceForm && (
-        <div className="service-form-overlay">
-          <div className="service-form-container">
-            <div className="form-header">
-              <h2>Service Management Form</h2>
+          {/* Tab Navigation */}
+          <div className="tab-container">
+            <div className="tab-buttons">
               <button
-                className="close-btn"
-                onClick={() => setShowServiceForm(false)}
+                className={`tab-btn-new ${
+                  activeTab === "published" ? "active" : ""
+                }`}
+                onClick={() => setActiveTab("published")}
               >
-                ×
+                <span className="tab-icon">📂</span>
+                Published Services
+              </button>
+              <button
+                className={`tab-btn-new ${
+                  activeTab === "pending" ? "active" : ""
+                }`}
+                onClick={() => setActiveTab("pending")}
+              >
+                <span className="tab-icon">⏳</span>
+                Pending Services
               </button>
             </div>
+          </div>
 
-            <form onSubmit={handleSubmit} className="comprehensive-form">
-              {/* Basic Information Section */}
-              <div className="form-section">
-                <h3>Basic Information</h3>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Service Name:</label>
-                    <input
-                      type="text"
-                      value={formData.basicInfo.serviceName}
-                      onChange={(e) =>
-                        handleFormChange(
-                          "basicInfo",
-                          "serviceName",
-                          e.target.value
-                        )
-                      }
-                      placeholder="Enter service name"
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Service Type:</label>
-                    <select
-                      value={formData.basicInfo.serviceType}
-                      onChange={(e) =>
-                        handleFormChange(
-                          "basicInfo",
-                          "serviceType",
-                          e.target.value
-                        )
-                      }
-                      required
+          {/* Content Sections */}
+          <div className="content-sections">
+            {activeTab === "published" && (
+              <div className="services-section">
+                <div className="section-header">
+                  <h2>Published Services</h2>
+                  <span className="service-count">
+                    {publishedServices.length} services
+                  </span>
+                </div>
+                <div className="services-grid-new">
+                  {publishedServices.map((service) => (
+                    <div className="service-card-new" key={service.serviceNum}>
+                      <div className="card-header">
+                        <div className="service-number-new">
+                          #{service.serviceNum}
+                        </div>
+                        <div className="card-actions">
+                          <div className="status-badge active">
+                            {service.status}
+                          </div>
+                          <button
+                            className="delete-btn"
+                            onClick={() =>
+                              handleDeleteService(
+                                service.serviceNum,
+                                service.serviceName
+                              )
+                            }
+                            title="Delete Service"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                      <div className="card-content">
+                        <h3 className="service-title-new">
+                          {service.serviceName}
+                        </h3>
+                        <p className="service-description-new">
+                          {service.serviceSummary}
+                        </p>
+                      </div>
+                      <div className="card-stats">
+                        <div className="stat-item-new">
+                          <span className="stat-icon-small">👁️</span>
+                          <span className="stat-text">
+                            {service.views} views
+                          </span>
+                        </div>
+                        <div className="stat-item-new">
+                          <span className="stat-icon-small">📝</span>
+                          <span className="stat-text">
+                            {service.applications} applications
+                          </span>
+                        </div>
+                      </div>
+                      <div className="card-footer">
+                        <div className="publish-date-new">
+                          Published: {service.publishedDate}
+                        </div>
+                        <button
+                          className="view-details-btn-new"
+                          onClick={() =>
+                            navigate("/publishDetails", {
+                              state: {
+                                serviceNum: service.serviceNum,
+                                serviceData: service,
+                              },
+                            })
+                          }
+                        >
+                          View Details
+                          <span className="arrow-new">→</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTab === "pending" && (
+              <div className="services-section">
+                <div className="section-header">
+                  <h2>Pending Services</h2>
+                  <span className="service-count">
+                    {pendingServices.length} services
+                  </span>
+                </div>
+                <div className="services-grid-new">
+                  {pendingServices.map((service) => (
+                    <div
+                      className="service-card-new pending"
+                      key={service.serviceNum}
                     >
-                      <option value="">Select service type</option>
-                      <option value="Aadhar Card">Aadhar Card</option>
-                      <option value="PAN Card">PAN Card</option>
-                      <option value="Driving License">Driving License</option>
-                      <option value="Voter ID">Voter ID</option>
-                      <option value="Healthcare">Healthcare</option>
-                      <option value="Education">Education</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label>Service Summary:</label>
-                  <textarea
-                    value={formData.basicInfo.serviceSummary}
-                    onChange={(e) =>
-                      handleFormChange(
-                        "basicInfo",
-                        "serviceSummary",
-                        e.target.value
-                      )
-                    }
-                    placeholder="Enter service summary"
-                    rows={3}
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Eligibility:</label>
-                  <textarea
-                    value={formData.basicInfo.eligibility}
-                    onChange={(e) =>
-                      handleFormChange(
-                        "basicInfo",
-                        "eligibility",
-                        e.target.value
-                      )
-                    }
-                    placeholder="Enter eligibility criteria"
-                    rows={3}
-                    required
-                  />
-                </div>
-
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Application Mode:</label>
-                    <select
-                      value={formData.basicInfo.applicationMode}
-                      onChange={(e) =>
-                        handleFormChange(
-                          "basicInfo",
-                          "applicationMode",
-                          e.target.value
-                        )
-                      }
-                      required
-                    >
-                      <option value="">Select mode</option>
-                      <option value="Online">Online</option>
-                      <option value="Offline">Offline</option>
-                      <option value="Both">Both</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Application URL:</label>
-                    <input
-                      type="url"
-                      value={formData.basicInfo.url}
-                      onChange={(e) =>
-                        handleFormChange("basicInfo", "url", e.target.value)
-                      }
-                      placeholder="Enter application URL"
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label>Application Address:</label>
-                  <input
-                    type="text"
-                    value={formData.basicInfo.address}
-                    onChange={(e) =>
-                      handleFormChange("basicInfo", "address", e.target.value)
-                    }
-                    placeholder="Enter application address"
-                  />
+                      <div className="card-header">
+                        <div className="service-number-new">
+                          #{service.serviceNum}
+                        </div>
+                        <div className="card-actions">
+                          <div className="status-badge pending">
+                            {service.status}
+                          </div>
+                          <button
+                            className="delete-btn"
+                            onClick={() =>
+                              handleDeleteService(
+                                service.serviceNum,
+                                service.serviceName
+                              )
+                            }
+                            title="Delete Service"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                      <div className="card-content">
+                        <h3 className="service-title-new">
+                          {service.serviceName}
+                        </h3>
+                        <p className="service-description-new">
+                          {service.serviceSummary}
+                        </p>
+                      </div>
+                      <div className="pending-info-new">
+                        <div className="info-item-new">
+                          <span className="info-icon-new">📅</span>
+                          <div className="info-content">
+                            <span className="info-label-new">Submitted</span>
+                            <span className="info-value-new">
+                              {service.submittedDate}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="info-item-new">
+                          <span className="info-icon-new">⏱️</span>
+                          <div className="info-content">
+                            <span className="info-label-new">Review Time</span>
+                            <span className="info-value-new">
+                              {service.reviewTime}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="card-footer">
+                        <div className="submit-date-new">
+                          Submitted: {service.submittedDate}
+                        </div>
+                        <button
+                          className="review-btn-new"
+                          onClick={() =>
+                            navigate("/pendingDetails", {
+                              state: { serviceNum: service.serviceNum },
+                            })
+                          }
+                        >
+                          Review Service
+                          <span className="arrow-new">→</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-
-              {/* Process Steps Section */}
-              <div className="form-section">
-                <h3>Process Steps</h3>
-                {formData.processSteps.map((step, index) => (
-                  <div key={index} className="step-item">
-                    <div className="step-number">{step.stepNo}</div>
-                    <textarea
-                      value={step.processDetails}
-                      onChange={(e) => {
-                        const newSteps = [...formData.processSteps];
-                        newSteps[index].processDetails = e.target.value;
-                        setFormData((prev) => ({
-                          ...prev,
-                          processSteps: newSteps,
-                        }));
-                      }}
-                      placeholder="Enter step details"
-                      rows={2}
-                      required
-                    />
-                    {index === formData.processSteps.length - 1 && (
-                      <button
-                        type="button"
-                        className="add-btn"
-                        onClick={addProcessStep}
-                      >
-                        +
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {/* Documents Section */}
-              <div className="form-section">
-                <h3>Required Documents</h3>
-                {formData.documents.map((doc, index) => (
-                  <div key={index} className="document-item">
-                    <div className="doc-number">{index + 1}</div>
-                    <input
-                      type="text"
-                      value={doc.documentType}
-                      onChange={(e) => {
-                        const newDocs = [...formData.documents];
-                        newDocs[index].documentType = e.target.value;
-                        setFormData((prev) => ({
-                          ...prev,
-                          documents: newDocs,
-                        }));
-                      }}
-                      placeholder="Document type"
-                      required
-                    />
-                    <textarea
-                      value={doc.validProof}
-                      onChange={(e) => {
-                        const newDocs = [...formData.documents];
-                        newDocs[index].validProof = e.target.value;
-                        setFormData((prev) => ({
-                          ...prev,
-                          documents: newDocs,
-                        }));
-                      }}
-                      placeholder="Valid proof details"
-                      rows={2}
-                      required
-                    />
-                    {index === formData.documents.length - 1 && (
-                      <button
-                        type="button"
-                        className="add-btn"
-                        onClick={addDocument}
-                      >
-                        +
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {/* Publish Details Section */}
-              <div className="form-section">
-                <h3>Publish Details</h3>
-
-                <div className="form-group">
-                  <label>Service Status:</label>
-                  <div className="radio-group">
-                    <label>
-                      <input
-                        type="radio"
-                        checked={formData.publishDetails.isActive === true}
-                        onChange={() =>
-                          handleFormChange("publishDetails", "isActive", true)
-                        }
-                      />
-                      Active
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        checked={formData.publishDetails.isActive === false}
-                        onChange={() =>
-                          handleFormChange("publishDetails", "isActive", false)
-                        }
-                      />
-                      Inactive
-                    </label>
-                  </div>
-                </div>
-
-                <div className="process-details-grid">
-                  <div className="process-group">
-                    <h4>Process Details</h4>
-                    <div className="form-group">
-                      <label>New Process:</label>
-                      <textarea
-                        value={formData.publishDetails.newProcess}
-                        onChange={(e) =>
-                          handleFormChange(
-                            "publishDetails",
-                            "newProcess",
-                            e.target.value
-                          )
-                        }
-                        placeholder="Enter new process details"
-                        rows={3}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Update Process:</label>
-                      <textarea
-                        value={formData.publishDetails.updateProcess}
-                        onChange={(e) =>
-                          handleFormChange(
-                            "publishDetails",
-                            "updateProcess",
-                            e.target.value
-                          )
-                        }
-                        placeholder="Enter update process details"
-                        rows={3}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Lost Process:</label>
-                      <textarea
-                        value={formData.publishDetails.lostProcess}
-                        onChange={(e) =>
-                          handleFormChange(
-                            "publishDetails",
-                            "lostProcess",
-                            e.target.value
-                          )
-                        }
-                        placeholder="Enter lost process details"
-                        rows={3}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Surrender Process:</label>
-                      <textarea
-                        value={formData.publishDetails.surrenderProcess}
-                        onChange={(e) =>
-                          handleFormChange(
-                            "publishDetails",
-                            "surrenderProcess",
-                            e.target.value
-                          )
-                        }
-                        placeholder="Enter surrender process details"
-                        rows={3}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="document-group">
-                    <h4>Document Details</h4>
-                    <div className="form-group">
-                      <label>New Document:</label>
-                      <textarea
-                        value={formData.publishDetails.newDocument}
-                        onChange={(e) =>
-                          handleFormChange(
-                            "publishDetails",
-                            "newDocument",
-                            e.target.value
-                          )
-                        }
-                        placeholder="Enter new document details"
-                        rows={3}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Update Document:</label>
-                      <textarea
-                        value={formData.publishDetails.updateDocument}
-                        onChange={(e) =>
-                          handleFormChange(
-                            "publishDetails",
-                            "updateDocument",
-                            e.target.value
-                          )
-                        }
-                        placeholder="Enter update document details"
-                        rows={3}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Lost Document:</label>
-                      <textarea
-                        value={formData.publishDetails.lostDocument}
-                        onChange={(e) =>
-                          handleFormChange(
-                            "publishDetails",
-                            "lostDocument",
-                            e.target.value
-                          )
-                        }
-                        placeholder="Enter lost document details"
-                        rows={3}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Surrender Document:</label>
-                      <textarea
-                        value={formData.publishDetails.surrenderDocument}
-                        onChange={(e) =>
-                          handleFormChange(
-                            "publishDetails",
-                            "surrenderDocument",
-                            e.target.value
-                          )
-                        }
-                        placeholder="Enter surrender document details"
-                        rows={3}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="form-actions">
-                <button
-                  type="button"
-                  className="cancel-btn"
-                  onClick={() => setShowServiceForm(false)}
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="submit-btn">
-                  Publish Service
-                </button>
-              </div>
-            </form>
+            )}
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

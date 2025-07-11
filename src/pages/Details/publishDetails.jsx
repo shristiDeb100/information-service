@@ -27,7 +27,7 @@ const PublishDetails = () => {
   }, [location.state]);
 
   const handleBack = () => {
-    navigate("/home");
+    navigate("/");
   };
 
   if (!serviceDetails) {
