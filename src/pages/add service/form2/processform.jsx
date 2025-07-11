@@ -183,6 +183,8 @@ const ProcessForm = () => {
               // Preserve all form data from previous forms
               form1Data: location.state?.serviceData,
               form2Data: formData,
+              // Add process steps to the main service data
+              processSteps: formData.steps,
             }}
           >
             <button type="submit">Submit Process</button>

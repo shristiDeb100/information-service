@@ -208,6 +208,10 @@ const SupportiveDocumentForm = () => {
             form1Data: location.state?.previousFormData,
             form2Data: location.state?.serviceData,
             form3Data: formData,
+            // Preserve process steps from previous form
+            processSteps:
+              location.state?.processSteps ||
+              location.state?.serviceData?.steps,
           }}
         >
           <button type="submit">Submit Documents</button>

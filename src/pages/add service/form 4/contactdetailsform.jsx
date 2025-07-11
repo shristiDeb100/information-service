@@ -15,6 +15,8 @@ const ContactDetailsForm = () => {
     address: "",
     district: "",
     subDistrict: "",
+    phoneNumber: "",
+    officeAddress: "",
   });
 
   // Auto-populate fields from previous forms
@@ -120,6 +122,7 @@ const ContactDetailsForm = () => {
             />
           </label>
         </div>
+        <h2>Official Contact</h2>
 
         <div className="form-row">
           <label>
@@ -133,14 +136,13 @@ const ContactDetailsForm = () => {
             />
           </label>
           <label>
-            Contact Number:
+            Phone Number:
             <input
               type="tel"
-              name="contactNumber"
-              value={formData.contactNumber}
+              name="phoneNumber"
+              value={formData.phoneNumber}
               onChange={handleChange}
-              placeholder="Enter contact number"
-              min="0"
+              placeholder="Enter phone number"
               required
             />
           </label>
@@ -148,32 +150,62 @@ const ContactDetailsForm = () => {
 
         <div className="form-row">
           <label>
-            Address:
+            Office Address:
             <textarea
-              name="address"
-              value={formData.address}
+              name="officeAddress"
+              value={formData.officeAddress}
               onChange={handleChange}
               required
             />
           </label>
         </div>
 
-        <Link
-          to="/add-service/publishServiceDetail"
-          state={{
-            serviceData: formData,
-            previousFormData: location.state?.serviceData,
-            initialFormData: location.state?.previousFormData,
-            originalFormData: location.state?.initialFormData,
-            // Preserve all form data from previous forms
-            form1Data: location.state?.initialFormData,
-            form2Data: location.state?.previousFormData,
-            form3Data: location.state?.serviceData,
-            form4Data: formData,
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: "2rem",
           }}
         >
-          <button type="submit">Submit Contact Details</button>
-        </Link>
+          <Link
+            to="/add-service/publishServiceDetail"
+            state={{
+              serviceData: formData,
+              previousFormData: location.state?.serviceData,
+              initialFormData: location.state?.previousFormData,
+              originalFormData: location.state?.initialFormData,
+              // Preserve all form data from previous forms
+              form1Data: location.state?.initialFormData,
+              form2Data: location.state?.previousFormData,
+              form3Data: location.state?.serviceData,
+              form4Data: formData,
+              // Add contact details to the main service data
+              contactDetails: formData,
+              // Preserve process steps from previous forms
+              processSteps:
+                location.state?.processSteps ||
+                location.state?.serviceData?.steps,
+              // Add scroll to top flag
+              scrollToTop: true,
+            }}
+          >
+            <button
+              type="submit"
+              style={{
+                padding: "0.6rem 1.5rem",
+                background: "#2563eb",
+                color: "#fff",
+                border: "none",
+                borderRadius: 6,
+                fontWeight: 600,
+                fontSize: "1rem",
+                cursor: "pointer",
+              }}
+            >
+              Submit
+            </button>
+          </Link>
+        </div>
       </form>
     </div>
   );

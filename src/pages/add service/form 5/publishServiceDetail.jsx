@@ -31,7 +31,14 @@ const PublishServiceDetail = () => {
         previousFormData,
         initialFormData,
         originalFormData,
+        currentFormData,
+        scrollToTop,
       } = location.state;
+
+      // Scroll to top if requested
+      if (scrollToTop) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
 
       // Get service name from any of the previous forms
       const serviceName =
@@ -41,10 +48,19 @@ const PublishServiceDetail = () => {
         originalFormData?.id ||
         "";
 
-      setFormData((prev) => ({
-        ...prev,
-        id: serviceName,
-      }));
+      // If we have current form data (from preview), use it
+      if (currentFormData) {
+        setFormData((prev) => ({
+          ...prev,
+          ...currentFormData,
+          id: serviceName,
+        }));
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          id: serviceName,
+        }));
+      }
     }
   }, [location.state]);
 
@@ -142,7 +158,10 @@ const PublishServiceDetail = () => {
 
       // Contact Details (from Form 4)
       contactDetails:
-        location.state?.form4Data || location.state?.serviceData || {},
+        location.state?.form4Data ||
+        location.state?.contactDetails ||
+        location.state?.serviceData ||
+        {},
 
       // Publish Details (from current form)
       isActive: formData.isActive,
@@ -174,7 +193,7 @@ const PublishServiceDetail = () => {
     alert("Service published successfully!");
 
     // Navigate to home page with the new service data
-    navigate("/home", {
+    navigate("/", {
       state: {
         scrollTo: "published",
         newService: completeServiceData,
@@ -477,21 +496,56 @@ const PublishServiceDetail = () => {
           </div>
         </div>
 
-        <button
-          type="submit"
+        <div
           style={{
-            padding: "0.6rem 1.5rem",
-            background: "#2563eb",
-            color: "#fff",
-            border: "none",
-            borderRadius: 6,
-            fontWeight: 600,
-            fontSize: "1rem",
-            cursor: "pointer",
+            display: "flex",
+            gap: "1rem",
+            justifyContent: "flex-end",
+            marginTop: "2rem",
           }}
         >
-          Publish Service
-        </button>
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/add-service/preview", {
+                state: {
+                  ...location.state,
+                  currentFormData: formData,
+                },
+              })
+            }
+            style={{
+              padding: "0.6rem 1.5rem",
+              background: "#f59e0b",
+              color: "#fff",
+              border: "none",
+              borderRadius: 6,
+              fontWeight: 600,
+              fontSize: "1rem",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            👁️ Preview
+          </button>
+          <button
+            type="submit"
+            style={{
+              padding: "0.6rem 1.5rem",
+              background: "#2563eb",
+              color: "#fff",
+              border: "none",
+              borderRadius: 6,
+              fontWeight: 600,
+              fontSize: "1rem",
+              cursor: "pointer",
+            }}
+          >
+            Publish Service
+          </button>
+        </div>
       </form>
     </div>
   );
